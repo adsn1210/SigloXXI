@@ -290,7 +290,10 @@ y `_redirects` para `/resena` y `/qr` (Fase 4 — necesitan Place ID / enlace re
 - [ ] DNS del dominio definitivo (lo contrata el cliente) + actualizar `site.url`
 - [ ] Revisar visualmente en navegador (375px y escritorio) — solo verificado por build/curl hasta ahora
 
-### Fase 3 — Reservas
+### Fase 3 — Reservas (en curso en la rama `fase-3-reservas`; `main` = producción)
+- Pasos de Google Cloud, CallMeBot y variables por contexto de Netlify: nota `Fase3-Configuracion.md` (Obsidian).
+- Dependencias propuestas, **pendientes de confirmación de Adri**: `zod`, `flatpickr`; sin `googleapis` (JWT RS256 con `node:crypto` + `fetch`).
+- Bloqueante para abrir el formulario al público: textos reales de `/privacidad` y `/aviso-legal` (faltan datos legales del cliente).
 - [ ] `lib/calendar.ts`, `lib/whatsapp.ts`, `lib/fechas.ts`, endpoints de la API
 - [ ] `ReservaForm.astro` con flatpickr (de momento `/reservas` es un placeholder con CTA a WhatsApp)
 - [ ] Pruebas con un calendario de test antes de usar el real
