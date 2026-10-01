@@ -1,7 +1,7 @@
 ---
 export const prerender = false; // el middleware del gate necesita evaluar la fecha en cada petición
 import "../styles/global.css";
-import { site } from "../config/site.ts";
+import SEO from "../components/SEO.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Carta from "../components/Carta.astro";
@@ -14,12 +14,7 @@ import WhatsAppBubble from "../components/WhatsAppBubble.astro";
 
 <html lang="es">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{site.nombre} — {site.eslogan}</title>
-		<meta name="description" content={`${site.nombre}, ${site.eslogan}. ${site.direccion.calle}, ${site.direccion.localidad}.`} />
+		<SEO datosLocal />
 	</head>
 	<body class="bg-[var(--color-noche)] text-gray-200">
 		<Header />

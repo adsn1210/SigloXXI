@@ -8,13 +8,27 @@ const GATE_PATH = "/countdown";
 // "/.netlify" incluye el CDN de imágenes de Netlify (/.netlify/images?url=...), que es
 // por donde se sirven en producción las imágenes de astro:assets: sin esta excepción,
 // el gate redirigía las imágenes de /countdown a /countdown y salían rotas.
-const EXEMPT_PREFIXES = ["/_astro", "/.netlify", "/fonts", "/favicon"];
+// robots.txt, sitemap, imagen OG e iconos también deben verse durante el gate (buscadores y redes).
+const EXEMPT_PREFIXES = [
+	"/_astro",
+	"/.netlify",
+	"/fonts",
+	"/favicon",
+	"/apple-touch-icon",
+	"/og.jpg",
+	"/robots.txt",
+	"/sitemap.xml",
+];
 
 export const onRequest = defineMiddleware((context, next) => {
 	const switchAt = new Date(site.inauguracion.gateSwitchAt);
 	const isBeforeLaunch = Date.now() < switchAt.getTime();
 
 	if (!isBeforeLaunch) {
+		// Tras la apertura la cuenta atrás ya no tiene sentido: se manda a la home.
+		if (context.url.pathname.replace(/\/$/, "") === GATE_PATH) {
+			return context.redirect("/", 301);
+		}
 		return next();
 	}
 

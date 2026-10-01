@@ -2,6 +2,9 @@
 export const prerender = false; // el middleware del gate necesita evaluar la fecha en cada petición
 import "../styles/global.css";
 import { site } from "../config/site.ts";
+
+// Página interna de diseño (Fase 1): solo visible en desarrollo.
+if (import.meta.env.PROD) return new Response(null, { status: 404 });
 ---
 
 <html lang="es">

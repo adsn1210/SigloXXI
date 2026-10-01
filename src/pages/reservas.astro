@@ -4,28 +4,27 @@ import "../styles/global.css";
 import { site } from "../config/site.ts";
 import NeonIcon from "../components/NeonIcon.astro";
 import WhatsAppBubble from "../components/WhatsAppBubble.astro";
+import SEO from "../components/SEO.astro";
+import Marca from "../components/Marca.astro";
 ---
 
 <html lang="es">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Reservas — {site.nombre}</title>
+		<SEO
+			titulo={`Reservas y eventos · ${site.nombre}, Parla`}
+			descripcion={`Reserva ${site.nombre} para tu cumpleaños, sesión de DJ, despedida o evento de empresa en Parla. Local completo o zona reservada. Escríbenos por WhatsApp.`}
+		/>
 	</head>
 	<body class="bg-neon-glow flex min-h-screen flex-col items-center justify-center gap-6 px-6 py-20 text-center text-gray-200">
-		<a href="/" class="acento-oro inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-[var(--color-neon-oro)]">
-			<NeonIcon name="crown" class="h-4 w-4" />
-			{site.nombre}
-		</a>
+		<Marca class="items-center" />
 
 		<h1 class="neon-text [font-family:var(--font-titular)] text-4xl text-[var(--color-neon-rosa)] lg:text-6xl">
 			Reservas de eventos
 		</h1>
 
 		<p class="max-w-md [font-family:var(--font-acento)] text-xl italic text-gray-300">
-			El formulario de reservas está en construcción (Fase 3). Mientras tanto, cuéntanos
-			qué necesitas por WhatsApp y te contestamos directamente.
+			Cumpleaños, sesiones de DJ, despedidas o eventos de empresa: cuéntanos la fecha y
+			lo que necesitas por WhatsApp y te contestamos directamente.
 		</p>
 
 		<a href={site.contacto.whatsappUrl} target="_blank" rel="noopener noreferrer" class="neon-btn inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm uppercase tracking-wide">

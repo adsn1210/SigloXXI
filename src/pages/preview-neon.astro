@@ -2,6 +2,9 @@
 export const prerender = false; // el middleware del gate necesita evaluar la fecha en cada petición
 import "../styles/global.css";
 
+// Página interna de diseño: solo visible en desarrollo.
+if (import.meta.env.PROD) return new Response(null, { status: 404 });
+
 // Iconos de línea provisionales para esta prueba — en Fase 2 pasan a src/components/NeonIcon.astro
 ---
 

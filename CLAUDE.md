@@ -227,6 +227,17 @@ corregido — ver `Decisiones.md` 2026-09-30). Por eso **toda página server-sid
 `/countdown` lleva `export const prerender = false`**. Si se añade una página nueva
 afectada por el gate, hay que añadir esa misma línea.
 
+**Recursos que deben verse durante el gate** van en `EXEMPT_PREFIXES` de `src/middleware.ts`:
+`/_astro`, `/.netlify` (CDN de imágenes de Netlify — sin esto las imágenes salen rotas en
+producción), fuentes, iconos, `og.jpg`, `robots.txt`, `sitemap.xml`. Cualquier archivo
+público nuevo que tenga que cargarse antes de la apertura debe añadirse ahí.
+
+Utilidades solo de desarrollo (`npm run dev`): `?preview=1` salta el gate (cookie) y
+`?ahora=2026-10-05` simula la fecha en el hero.
+
+SEO: todo `<head>` usa `src/components/SEO.astro`; `site.url` en `site.ts` alimenta
+canonical, OG, sitemap y robots — **cambiarlo al dominio definitivo** cuando exista.
+
 ## Estructura actual
 ```
 src/
@@ -238,16 +249,20 @@ src/
     fotos/                     # fotos reales del local (mural astronauta, murales, barra)
     decor/                     # gráficos de stock (coco, blob, mandala) — acentos de bajo protagonismo
   components/
+    SEO.astro                  # <head> común: title, description, canonical, OG, Twitter, favicons, JSON-LD BarOrPub
+    Marca.astro                # wordmark "Taberna / SIGLO XXI" (sustituye a la píldora con corona)
     Header.astro  Hero.astro  Carta.astro  Eventos.astro
     Galeria.astro  Visitanos.astro  Footer.astro
     NeonIcon.astro  WhatsAppBubble.astro
   pages/
     index.astro                # home real (prerender:false)
-    countdown.astro             # única página prerenderizada (exenta del gate)
+    countdown.astro             # única página prerenderizada (exenta del gate); tras la apertura redirige a /
     reservas.astro              # placeholder (CTA a WhatsApp) — formulario real es Fase 3
-    aviso-legal.astro  privacidad.astro  cookies.astro   # placeholders, prerender:false
-    wireframe.astro  preview-neon.astro                   # referencias de Fase 1/diseño
-public/  favicon.ico  favicon.svg
+    404.astro                   # prerender:false
+    aviso-legal.astro  privacidad.astro  cookies.astro   # placeholders con noindex, prerender:false
+    wireframe.astro  preview-neon.astro                   # solo en dev (404 en producción)
+    sitemap.xml.ts  robots.txt.ts                         # generados desde site.url
+public/  favicon.ico  favicon.svg  apple-touch-icon.png  og.jpg (1200×630)
 ```
 Pendiente aún (no construido): `lib/calendar.ts`, `lib/whatsapp.ts`, `lib/fechas.ts`,
 `api/disponibilidad.ts`, `api/reservas.ts`, `ReservaForm.astro` (Fase 3), `scripts/qr.mjs`
@@ -270,8 +285,9 @@ y `_redirects` para `/resena` y `/qr` (Fase 4 — necesitan Place ID / enlace re
 - [x] Gate de cuenta atrás hasta el 03/10/2026 (ver sección arriba)
 - [x] Home real con fotos reales del local, menú hamburguesa, orden Carta → Galería → Eventos → Ubícanos
 - [x] Páginas legales con placeholders
-- [ ] JSON-LD `BarOrPub`, meta OG (imagen del flyer), favicon con corona
-- [ ] Deploy en Netlify y DNS del dominio
+- [x] JSON-LD `BarOrPub`, meta OG (imagen del mural), favicon con corona, sitemap, robots, 404
+- [x] Deploy en Netlify (https://sigoxxi.netlify.app, cuenta de Adri, auto-deploy desde `main`)
+- [ ] DNS del dominio definitivo (lo contrata el cliente) + actualizar `site.url`
 - [ ] Revisar visualmente en navegador (375px y escritorio) — solo verificado por build/curl hasta ahora
 
 ### Fase 3 — Reservas

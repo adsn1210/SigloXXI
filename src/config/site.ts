@@ -1,12 +1,28 @@
 export const site = {
   nombre: "Taberna Siglo XXI",
   eslogan: "Bar · Tardeo · Copas",
+  // TODO: cambiar por el dominio definitivo cuando el cliente lo contrate (canonical, OG, sitemap)
+  url: "https://sigoxxi.netlify.app",
+
+  seo: {
+    titulo: "Taberna Siglo XXI · Bar de tardeo y copas en Parla",
+    descripcion:
+      "Bar de tardeo y copas en Parla (Madrid): cervezas, combinados y tapas bajo luz neón. Sesiones de DJ, cumpleaños y eventos. Jueves a domingo, 17:30–02:00.",
+    // public/og.jpg — 1200×630, generada a partir del mural del astronauta
+    imagen: "/og.jpg",
+    imagenAlt: "Mural del astronauta en luz negra de Taberna Siglo XXI, Parla",
+    colorTema: "#07030f",
+  },
   instagram: "@tabernasxxi",
   instagramUrl: "https://instagram.com/tabernasxxi",
 
   direccion: {
     calle: "Calle Doctor Morcillo 38",
     localidad: "Parla (Madrid)",
+    // datos estructurados (JSON-LD)
+    municipio: "Parla",
+    provincia: "Madrid",
+    pais: "ES",
     // enlace oficial de la ficha de Google Maps facilitado por el cliente (2026-10-01)
     mapsUrl: "https://maps.app.goo.gl/Prj2M6chw3TcRu968",
     placeId: "",
@@ -14,6 +30,8 @@ export const site = {
 
   horario: {
     dias: "Jueves a domingo",
+    // schema.org (JSON-LD)
+    diasSchema: ["Thursday", "Friday", "Saturday", "Sunday"],
     apertura: "17:30",
     cierre: "02:00",
   },
@@ -21,6 +39,7 @@ export const site = {
   contacto: {
     // Decisión 2026-09-30: se usa el teléfono de gestión también como WhatsApp público
     telefonoPublico: "603 712 724",
+    telefonoInternacional: "+34603712724",
     whatsappUrl: "https://wa.me/34603712724",
   },
 

@@ -1,6 +1,7 @@
 ---
 import { site } from "../config/site.ts";
 import NeonIcon from "./NeonIcon.astro";
+import Marca from "./Marca.astro";
 
 const links = [
 	{ href: "#inicio", label: "Inicio" },
@@ -12,10 +13,7 @@ const links = [
 ---
 
 <header class="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[var(--color-noche)]/90 px-5 py-4 backdrop-blur lg:px-10">
-	<a href="#inicio" aria-label={`${site.nombre}, ir al inicio`} class="flex flex-col leading-none text-[var(--color-neon-oro)]">
-		<span class="[font-family:var(--font-acento)] text-lg italic">Taberna</span>
-		<span class="-mt-0.5 text-sm font-bold uppercase tracking-[0.35em]">Siglo XXI</span>
-	</a>
+	<Marca href="#inicio" />
 
 	<!-- Un único botón abre y cierra: las tres líneas se convierten en X -->
 	<button

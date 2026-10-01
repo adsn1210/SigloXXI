@@ -1,7 +1,8 @@
 ---
 import "../styles/global.css";
 import { site } from "../config/site.ts";
-import NeonIcon from "../components/NeonIcon.astro";
+import SEO from "../components/SEO.astro";
+import Marca from "../components/Marca.astro";
 
 interface Props {
 	titulo: string;
@@ -12,17 +13,12 @@ const { titulo } = Astro.props;
 
 <html lang="es">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<title>{titulo} — {site.nombre}</title>
+		<!-- noindex mientras el contenido legal sea provisional -->
+		<SEO titulo={`${titulo} · ${site.nombre}`} descripcion={`${titulo} de ${site.nombre}, Parla (Madrid).`} noindex />
 	</head>
 	<body class="min-h-screen bg-[var(--color-noche)] px-6 py-16 text-gray-300 lg:px-10">
 		<div class="mx-auto max-w-2xl">
-			<a href="/" class="acento-oro mb-10 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-[var(--color-neon-oro)]">
-				<NeonIcon name="crown" class="h-4 w-4" />
-				{site.nombre}
-			</a>
+			<Marca class="mb-10 inline-flex" />
 
 			<h1 class="neon-text mb-6 [font-family:var(--font-titular)] text-3xl text-[var(--color-neon-cian)] lg:text-4xl">
 				{titulo}

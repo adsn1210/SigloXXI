@@ -3,16 +3,19 @@ import "../styles/global.css";
 import { site } from "../config/site.ts";
 import NeonIcon from "../components/NeonIcon.astro";
 import WhatsAppBubble from "../components/WhatsAppBubble.astro";
+import SEO from "../components/SEO.astro";
 import { Image } from "astro:assets";
 import coco from "../assets/decor/coco-neon.png";
 ---
 
 <html lang="es">
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Inauguración — {site.nombre}</title>
+		<SEO
+			titulo={`Inauguración 3 de octubre · ${site.nombre}, Parla`}
+			descripcion={`${site.nombre} abre el 3 de octubre de 2026 en ${site.direccion.calle}, Parla. Bar de tardeo y copas: ${site.horario.dias.toLowerCase()}, ${site.horario.apertura}–${site.horario.cierre}.`}
+			ruta="/countdown"
+			datosLocal
+		/>
 	</head>
 	<body class="bg-neon-glow flex min-h-screen flex-col items-center justify-between px-6 py-10 text-gray-200 lg:py-16">
 		<Image
@@ -85,8 +88,18 @@ import coco from "../assets/decor/coco-neon.png";
 
 				const tick = () => {
 					const diff = switchAt - Date.now();
+					// Al llegar a 0 se va a la home. (Antes hacía reload() de /countdown, que
+					// sigue existiendo tras el gate → bucle de recargas infinito.)
+					// Si el reloj del móvil va adelantado, el servidor devolvería a /countdown:
+					// se intenta como mucho una vez por minuto para no rebotar en bucle.
 					if (diff <= 0) {
-						window.location.reload();
+						clearInterval(intervalo);
+						let ultimoSalto = 0;
+						try {
+							ultimoSalto = Number(sessionStorage.getItem("sxxi-salto") ?? 0);
+							sessionStorage.setItem("sxxi-salto", String(Date.now()));
+						} catch {}
+						if (Date.now() - ultimoSalto > 60_000) window.location.replace("/");
 						return;
 					}
 					const totalSeconds = Math.floor(diff / 1000);
@@ -96,8 +109,8 @@ import coco from "../assets/decor/coco-neon.png";
 					if (seg) seg.textContent = pad(totalSeconds % 60);
 				};
 
+				const intervalo = setInterval(tick, 1000);
 				tick();
-				setInterval(tick, 1000);
 			}
 		</script>
 	</body>
