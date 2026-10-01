@@ -45,36 +45,52 @@ export const onRequest = defineMiddleware((context, next) => {
 	// Vista previa antes de la apertura: ?preview=<PREVIEW_TOKEN> deja una cookie que salta
 	// el gate en ese navegador; ?preview=salir la borra. Sin token configurado no hay
 	// vista previa en producción. En desarrollo vale también ?preview=1.
+	// Las cookies se manejan a mano con cabeceras: en la Edge Function de Netlify,
+	// context.cookies no se adjunta a las respuestas creadas por el propio middleware.
 	const token = leerPreviewToken();
 	const esValido = (valor: string | null | undefined) =>
 		!!valor && ((!!token && valor === token) || (import.meta.env.DEV && valor === "1"));
+	// Diagnóstico sin revelar nada: solo indica si el servidor tiene un token configurado.
+	const diagnostico = { "x-sxxi-preview": token ? "configurado" : "sin-token" };
 
 	const param = context.url.searchParams.get("preview");
 	if (param === "salir") {
-		context.cookies.delete(PREVIEW_COOKIE, { path: "/" });
-		return context.redirect(GATE_PATH, 302);
+		return redirigir(GATE_PATH, { ...diagnostico, "set-cookie": `${PREVIEW_COOKIE}=; Path=/; Max-Age=0` });
 	}
 	if (esValido(param)) {
-		context.cookies.set(PREVIEW_COOKIE, param!, {
-			path: "/",
-			httpOnly: true,
-			secure: !import.meta.env.DEV,
-			sameSite: "lax",
-			maxAge: 60 * 60 * 24 * 7,
-		});
+		const seguro = import.meta.env.DEV ? "" : "; Secure";
 		// Se quita el token de la URL para que no quede en el historial ni se comparta por error.
 		const limpia = new URL(context.url);
 		limpia.searchParams.delete("preview");
-		return context.redirect(limpia.pathname + limpia.search + limpia.hash, 302);
+		return redirigir(limpia.pathname + limpia.search, {
+			...diagnostico,
+			"set-cookie": `${PREVIEW_COOKIE}=${param}; Path=/; Max-Age=${60 * 60 * 24 * 7}; HttpOnly; SameSite=Lax${seguro}`,
+		});
 	}
-	if (esValido(context.cookies.get(PREVIEW_COOKIE)?.value)) {
+	if (esValido(leerCookie(context.request, PREVIEW_COOKIE))) {
 		return next();
 	}
 
-	return context.redirect(GATE_PATH, 302);
+	return redirigir(GATE_PATH, diagnostico);
 });
 
 const PREVIEW_COOKIE = "sxxi_preview";
+
+function redirigir(destino: string, cabeceras: Record<string, string>): Response {
+	return new Response(null, {
+		status: 302,
+		headers: { location: destino, "cache-control": "no-store", ...cabeceras },
+	});
+}
+
+function leerCookie(request: Request, nombre: string): string | undefined {
+	const cabecera = request.headers.get("cookie") ?? "";
+	for (const parte of cabecera.split(";")) {
+		const [clave, ...resto] = parte.trim().split("=");
+		if (clave === nombre) return resto.join("=");
+	}
+	return undefined;
+}
 
 // Se lee en tiempo de ejecución (no se incrusta en el código): en Netlify Edge con
 // Netlify.env; en desarrollo/Node, de .env vía import.meta.env o process.env.
