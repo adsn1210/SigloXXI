@@ -3,14 +3,12 @@ import { site } from "../config/site.ts";
 import NeonIcon from "./NeonIcon.astro";
 ---
 
-<!-- bottom-20: Netlify inyecta su botón "Powered by Netlify" en los 64 px inferiores de la esquina
-     derecha (iframe fijo, fuera de nuestro código); la burbuja va justo encima para no quedar tapada -->
 <a
 	href={site.contacto.whatsappUrl}
 	target="_blank"
 	rel="noopener noreferrer"
 	aria-label="Escríbenos por WhatsApp"
-	class="neon-btn fixed bottom-20 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-noche)]"
+	class="neon-btn fixed bottom-5 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-noche)]"
 >
 	<NeonIcon name="whatsapp" class="h-7 w-7" />
 </a>
