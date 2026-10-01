@@ -4,8 +4,8 @@ import { site } from "../config/site.ts";
 import NeonIcon from "./NeonIcon.astro";
 import coco from "../assets/decor/coco-neon.png";
 import cocteles from "../assets/fotos/cocteles.jpg";
-import chupitos from "../assets/fotos/chupitos.jpg";
-import botella from "../assets/fotos/botella.jpg";
+import copasChupitos from "../assets/fotos/copas-chupitos.jpg";
+import brindisNachos from "../assets/fotos/brindis-nachos.jpg";
 
 const iconos = {
 	cerveza: "beer",
@@ -16,9 +16,9 @@ const iconos = {
 } as const;
 
 const fotos = [
+	{ src: copasChupitos, alt: "Combinados y chupitos con limón bajo luz roja, Taberna Siglo XXI" },
+	{ src: brindisNachos, alt: "Brindis con chupitos y nachos para compartir, Taberna Siglo XXI" },
 	{ src: cocteles, alt: "Cócteles servidos en barra, Taberna Siglo XXI" },
-	{ src: chupitos, alt: "Chupitos preparados en barra, Taberna Siglo XXI" },
-	{ src: botella, alt: "Botella y cubitera de hielo, Taberna Siglo XXI" },
 ];
 ---
 
