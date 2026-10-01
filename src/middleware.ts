@@ -32,17 +32,6 @@ export const onRequest = defineMiddleware((context, next) => {
 		return next();
 	}
 
-	// Solo en desarrollo: ?preview=1 deja una cookie que salta el gate para revisar la web real.
-	if (import.meta.env.DEV) {
-		if (context.url.searchParams.get("preview") === "1") {
-			context.cookies.set("preview", "1", { path: "/" });
-			return next();
-		}
-		if (context.cookies.get("preview")?.value === "1") {
-			return next();
-		}
-	}
-
 	// Astro genera internamente la ruta prerenderizada como "/countdown/" (con barra
 	// final, formato "directory"); normalizamos para que no se redirija a sí misma.
 	const pathname = context.url.pathname.replace(/\/$/, "") || "/";
@@ -53,5 +42,48 @@ export const onRequest = defineMiddleware((context, next) => {
 		return next();
 	}
 
+	// Vista previa antes de la apertura: ?preview=<PREVIEW_TOKEN> deja una cookie que salta
+	// el gate en ese navegador; ?preview=salir la borra. Sin token configurado no hay
+	// vista previa en producción. En desarrollo vale también ?preview=1.
+	const token = leerPreviewToken();
+	const esValido = (valor: string | null | undefined) =>
+		!!valor && ((!!token && valor === token) || (import.meta.env.DEV && valor === "1"));
+
+	const param = context.url.searchParams.get("preview");
+	if (param === "salir") {
+		context.cookies.delete(PREVIEW_COOKIE, { path: "/" });
+		return context.redirect(GATE_PATH, 302);
+	}
+	if (esValido(param)) {
+		context.cookies.set(PREVIEW_COOKIE, param!, {
+			path: "/",
+			httpOnly: true,
+			secure: !import.meta.env.DEV,
+			sameSite: "lax",
+			maxAge: 60 * 60 * 24 * 7,
+		});
+		// Se quita el token de la URL para que no quede en el historial ni se comparta por error.
+		const limpia = new URL(context.url);
+		limpia.searchParams.delete("preview");
+		return context.redirect(limpia.pathname + limpia.search + limpia.hash, 302);
+	}
+	if (esValido(context.cookies.get(PREVIEW_COOKIE)?.value)) {
+		return next();
+	}
+
 	return context.redirect(GATE_PATH, 302);
 });
+
+const PREVIEW_COOKIE = "sxxi_preview";
+
+// Se lee en tiempo de ejecución (no se incrusta en el código): en Netlify Edge con
+// Netlify.env; en desarrollo/Node, de .env vía import.meta.env o process.env.
+function leerPreviewToken(): string | undefined {
+	const netlify = (globalThis as { Netlify?: { env?: { get(nombre: string): string | undefined } } }).Netlify;
+	const valor =
+		netlify?.env?.get("PREVIEW_TOKEN") ??
+		import.meta.env.PREVIEW_TOKEN ??
+		(typeof process !== "undefined" ? process.env?.PREVIEW_TOKEN : undefined);
+	// tokens cortos se rechazan para que nadie lo adivine
+	return valor && valor.length >= 16 ? valor : undefined;
+}
