@@ -51,7 +51,7 @@ export const onRequest = defineMiddleware((context, next) => {
 	const esValido = (valor: string | null | undefined) =>
 		!!valor && ((!!token && valor === token) || (import.meta.env.DEV && valor === "1"));
 	// Diagnóstico sin revelar nada: solo indica si el servidor tiene un token configurado.
-	const diagnostico = { "x-sxxi-preview": token ? "configurado" : "sin-token" };
+	const diagnostico = { "x-sxxi-preview": token ? `configurado-${token.length}` : "sin-token" };
 
 	const param = context.url.searchParams.get("preview");
 	if (param === "salir") {
@@ -96,10 +96,12 @@ function leerCookie(request: Request, nombre: string): string | undefined {
 // Netlify.env; en desarrollo/Node, de .env vía import.meta.env o process.env.
 function leerPreviewToken(): string | undefined {
 	const netlify = (globalThis as { Netlify?: { env?: { get(nombre: string): string | undefined } } }).Netlify;
-	const valor =
+	const crudo =
 		netlify?.env?.get("PREVIEW_TOKEN") ??
 		import.meta.env.PREVIEW_TOKEN ??
 		(typeof process !== "undefined" ? process.env?.PREVIEW_TOKEN : undefined);
+	// tolera espacios, saltos de línea o comillas pegados por error en el panel de Netlify
+	const valor = crudo?.trim().replace(/^["']|["']$/g, "");
 	// tokens cortos se rechazan para que nadie lo adivine
 	return valor && valor.length >= 16 ? valor : undefined;
 }
