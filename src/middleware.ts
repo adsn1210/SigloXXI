@@ -5,7 +5,10 @@ import { site } from "./config/site.ts";
 // Corre como Netlify Edge Function (astro.config.mjs: netlify({ edgeMiddleware: true })),
 // así que intercepta también las páginas estáticas prerenderizadas, no solo las SSR.
 const GATE_PATH = "/countdown";
-const EXEMPT_PREFIXES = ["/_astro", "/fonts", "/favicon"];
+// "/.netlify" incluye el CDN de imágenes de Netlify (/.netlify/images?url=...), que es
+// por donde se sirven en producción las imágenes de astro:assets: sin esta excepción,
+// el gate redirigía las imágenes de /countdown a /countdown y salían rotas.
+const EXEMPT_PREFIXES = ["/_astro", "/.netlify", "/fonts", "/favicon"];
 
 export const onRequest = defineMiddleware((context, next) => {
 	const switchAt = new Date(site.inauguracion.gateSwitchAt);
