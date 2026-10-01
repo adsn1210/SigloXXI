@@ -1,0 +1,195 @@
+---
+import { Image } from "astro:assets";
+import { site } from "../config/site.ts";
+import NeonIcon from "./NeonIcon.astro";
+import muralFrases from "../assets/fotos/mural-frases.jpg";
+import muralLabios from "../assets/fotos/mural-labios.jpg";
+import muralAstronauta from "../assets/fotos/mural-astronauta.jpg";
+import cocteles from "../assets/fotos/cocteles.jpg";
+import chupitos from "../assets/fotos/chupitos.jpg";
+import botella from "../assets/fotos/botella.jpg";
+import mandala from "../assets/decor/mandala-neon.jpg";
+
+const fotos = [
+	{ src: muralAstronauta, alt: "Mural del astronauta en luz negra" },
+	{ src: muralFrases, alt: "Pared de frases y arte en luz negra" },
+	{ src: muralLabios, alt: "Detalle mural pop-art en luz negra" },
+	{ src: cocteles, alt: "Cócteles servidos en barra" },
+	{ src: chupitos, alt: "Chupitos preparados en barra con luz neón" },
+	{ src: botella, alt: "Botella en cubitera bajo luz neón" },
+];
+---
+
+<section id="galeria" class="relative overflow-hidden bg-[var(--color-noche)] px-6 py-20 lg:px-10 lg:py-28">
+	<Image
+		src={mandala}
+		alt=""
+		role="presentation"
+		width={900}
+		height={900}
+		class="pointer-events-none absolute -left-40 top-1/2 w-[32rem] -translate-y-1/2 opacity-20 mix-blend-screen blur-2xl"
+	/>
+
+	<div class="relative mx-auto max-w-5xl">
+		<div class="mb-8 flex items-end justify-between gap-4">
+			<h2 class="neon-text [font-family:var(--font-titular)] text-3xl tracking-wide text-[var(--color-neon-violeta)] lg:text-5xl">
+				Galería
+			</h2>
+			<div class="flex gap-2">
+				<button type="button" data-galeria-prev aria-label="Fotos anteriores" class="galeria-flecha">
+					<NeonIcon name="arrow-left" class="h-5 w-5" />
+				</button>
+				<button type="button" data-galeria-next aria-label="Fotos siguientes" class="galeria-flecha">
+					<NeonIcon name="arrow-right" class="h-5 w-5" />
+				</button>
+			</div>
+		</div>
+
+		<div data-galeria-pista class="galeria-pista flex snap-x snap-mandatory gap-4 overflow-x-auto">
+			{fotos.map((foto) => (
+				<Image
+					src={foto.src}
+					alt={foto.alt}
+					widths={[320, 480]}
+					sizes="320px"
+					class="neon-box h-48 w-64 flex-none snap-start rounded-lg object-cover lg:h-64 lg:w-80"
+				/>
+			))}
+		</div>
+
+		<!-- Riel de scroll propio: la barra nativa se oculta y esta la sustituye (arrastrable y clicable) -->
+		<div data-galeria-riel class="galeria-riel mt-6" aria-hidden="true">
+			<div data-galeria-cursor class="galeria-cursor"></div>
+		</div>
+
+		<div class="mt-5 flex items-center justify-between">
+			<a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-[var(--color-neon-cian)] underline underline-offset-4">
+				<NeonIcon name="instagram" class="h-4 w-4" />
+				Más en Instagram
+			</a>
+			<span data-galeria-contador class="[font-family:var(--font-acento)] text-lg italic text-[var(--color-neon-oro)]"></span>
+		</div>
+	</div>
+</section>
+
+<style>
+	.galeria-pista {
+		scrollbar-width: none;
+	}
+	.galeria-pista::-webkit-scrollbar {
+		display: none;
+	}
+
+	.galeria-riel {
+		position: relative;
+		height: 2px;
+		background: color-mix(in srgb, var(--color-neon-oro) 35%, transparent);
+		cursor: pointer;
+		touch-action: none;
+	}
+	/* zona de toque más alta que la línea visible */
+	.galeria-riel::before {
+		content: "";
+		position: absolute;
+		inset: -12px 0;
+	}
+
+	.galeria-cursor {
+		position: absolute;
+		top: 50%;
+		left: 0;
+		height: 4px;
+		min-width: 2.5rem;
+		border-radius: 999px;
+		background: linear-gradient(90deg, var(--color-neon-rosa), var(--color-neon-violeta), var(--color-neon-cian));
+		box-shadow: 0 0 12px color-mix(in srgb, var(--color-neon-violeta) 80%, transparent);
+		transform: translateY(-50%);
+		cursor: grab;
+	}
+	.galeria-cursor:active {
+		cursor: grabbing;
+	}
+
+	.galeria-flecha {
+		display: inline-flex;
+		height: 2.75rem;
+		width: 2.75rem;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		border: 1px solid var(--color-neon-oro);
+		color: var(--color-neon-oro);
+		box-shadow: 0 0 14px -3px var(--color-neon-oro);
+		transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+	}
+	.galeria-flecha:hover:not(:disabled) {
+		color: var(--color-neon-cian);
+		border-color: var(--color-neon-cian);
+		box-shadow: 0 0 14px -3px var(--color-neon-cian);
+	}
+	.galeria-flecha:disabled {
+		opacity: 0.3;
+		cursor: default;
+	}
+</style>
+
+<script>
+	const pista = document.querySelector<HTMLElement>("[data-galeria-pista]");
+	const riel = document.querySelector<HTMLElement>("[data-galeria-riel]");
+	const cursor = document.querySelector<HTMLElement>("[data-galeria-cursor]");
+	const prev = document.querySelector<HTMLButtonElement>("[data-galeria-prev]");
+	const next = document.querySelector<HTMLButtonElement>("[data-galeria-next]");
+	const contador = document.querySelector<HTMLElement>("[data-galeria-contador]");
+
+	if (pista && riel && cursor) {
+		const suave = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+		const fotos = Array.from(pista.children) as HTMLElement[];
+		const maxScroll = () => pista.scrollWidth - pista.clientWidth;
+
+		const pintar = () => {
+			const max = maxScroll();
+			const visible = pista.clientWidth / pista.scrollWidth;
+			const ancho = Math.max(visible * riel.clientWidth, 40);
+			const progreso = max > 0 ? pista.scrollLeft / max : 0;
+			cursor.style.width = `${ancho}px`;
+			cursor.style.left = `${progreso * (riel.clientWidth - ancho)}px`;
+			riel.style.visibility = max > 0 ? "visible" : "hidden";
+
+			if (prev) prev.disabled = pista.scrollLeft <= 2;
+			if (next) next.disabled = pista.scrollLeft >= max - 2;
+
+			if (contador) {
+				const actual = fotos.findIndex((f) => f.offsetLeft + f.offsetWidth / 2 >= pista.scrollLeft) + 1;
+				contador.textContent = `${String(actual).padStart(2, "0")} / ${String(fotos.length).padStart(2, "0")}`;
+			}
+		};
+
+		const paso = () => (fotos[0]?.offsetWidth ?? 280) + 16;
+		prev?.addEventListener("click", () => pista.scrollBy({ left: -paso(), behavior: suave }));
+		next?.addEventListener("click", () => pista.scrollBy({ left: paso(), behavior: suave }));
+
+		// arrastrar o pulsar sobre el riel mueve la galería
+		const irA = (clientX: number) => {
+			const r = riel.getBoundingClientRect();
+			const ancho = cursor.offsetWidth;
+			const ratio = Math.min(Math.max((clientX - r.left - ancho / 2) / (r.width - ancho), 0), 1);
+			pista.scrollLeft = ratio * maxScroll();
+		};
+		riel.addEventListener("pointerdown", (e) => {
+			riel.setPointerCapture(e.pointerId);
+			pista.style.scrollSnapType = "none";
+			irA(e.clientX);
+		});
+		riel.addEventListener("pointermove", (e) => {
+			if (riel.hasPointerCapture(e.pointerId)) irA(e.clientX);
+		});
+		riel.addEventListener("pointerup", (e) => {
+			riel.releasePointerCapture(e.pointerId);
+			pista.style.scrollSnapType = "";
+		});
+
+		pista.addEventListener("scroll", pintar, { passive: true });
+		window.addEventListener("resize", pintar);
+		pintar();
+	}
+</script>

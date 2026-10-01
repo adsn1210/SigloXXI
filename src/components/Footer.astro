@@ -1,0 +1,30 @@
+---
+import { site } from "../config/site.ts";
+import NeonIcon from "./NeonIcon.astro";
+---
+
+<footer class="border-t border-white/10 px-6 py-12 text-center text-sm text-gray-500 lg:py-16">
+	<p class="mb-6 [font-family:var(--font-brocha)] text-2xl text-[var(--color-neon-oro)]">
+		Te esperamos
+	</p>
+	<div class="mb-4 flex justify-center gap-6">
+		<a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-[var(--color-neon-cian)]">
+			<NeonIcon name="instagram" class="h-4 w-4" />
+			Instagram
+		</a>
+		<a href={site.contacto.whatsappUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-[var(--color-neon-cian)]">
+			<NeonIcon name="whatsapp" class="h-4 w-4" />
+			WhatsApp
+		</a>
+		<a href={site.direccion.mapsUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-[var(--color-neon-cian)]">
+			<NeonIcon name="pin" class="h-4 w-4" />
+			Maps
+		</a>
+	</div>
+	<div class="mb-3 flex justify-center gap-4 text-xs">
+		<a href="/aviso-legal" class="underline underline-offset-2 hover:text-gray-300">Aviso legal</a>
+		<a href="/privacidad" class="underline underline-offset-2 hover:text-gray-300">Privacidad</a>
+		<a href="/cookies" class="underline underline-offset-2 hover:text-gray-300">Cookies</a>
+	</div>
+	<p class="text-xs">&copy; 2026 {site.nombre}</p>
+</footer>

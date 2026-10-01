@@ -1,0 +1,107 @@
+---
+import { site } from "../config/site.ts";
+import NeonIcon from "./NeonIcon.astro";
+---
+
+<section id="visitanos" class="px-6 py-20 lg:px-10 lg:py-28">
+	<div class="mx-auto max-w-5xl lg:flex lg:items-stretch lg:gap-12">
+		<div class="lg:w-1/2">
+			<h2 class="neon-text mb-8 [font-family:var(--font-titular)] text-3xl tracking-wide text-[var(--color-neon-cian)] lg:text-5xl">
+				Visítanos
+			</h2>
+
+			<dl class="mb-8 space-y-5">
+				<div class="flex gap-3">
+					<NeonIcon name="calendar" class="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-neon-oro)]" />
+					<div>
+						<dt class="text-xs uppercase tracking-[0.2em] text-gray-500">Horario</dt>
+						<dd class="text-base text-gray-200">{site.horario.dias}</dd>
+						<dd class="[font-family:var(--font-acento)] text-xl italic text-[var(--color-neon-oro)]">
+							{site.horario.apertura} – {site.horario.cierre}
+						</dd>
+					</div>
+				</div>
+				<div class="flex gap-3">
+					<NeonIcon name="pin" class="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-neon-oro)]" />
+					<div>
+						<dt class="text-xs uppercase tracking-[0.2em] text-gray-500">Dirección</dt>
+						<dd class="text-base text-gray-200">{site.direccion.calle}</dd>
+						<dd class="text-sm text-gray-400">{site.direccion.localidad}</dd>
+					</div>
+				</div>
+				<div class="flex gap-3">
+					<NeonIcon name="whatsapp" class="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-neon-oro)]" />
+					<div>
+						<dt class="text-xs uppercase tracking-[0.2em] text-gray-500">WhatsApp</dt>
+						<dd>
+							<a href={site.contacto.whatsappUrl} target="_blank" rel="noopener noreferrer" class="text-base text-gray-200 underline-offset-4 hover:text-[var(--color-neon-cian)] hover:underline">
+								{site.contacto.telefonoPublico}
+							</a>
+						</dd>
+					</div>
+				</div>
+				<div class="flex gap-3">
+					<NeonIcon name="instagram" class="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-neon-oro)]" />
+					<div>
+						<dt class="text-xs uppercase tracking-[0.2em] text-gray-500">Instagram</dt>
+						<dd>
+							<a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" class="text-base text-gray-200 underline-offset-4 hover:text-[var(--color-neon-cian)] hover:underline">
+								{site.instagram}
+							</a>
+						</dd>
+					</div>
+				</div>
+			</dl>
+
+			<div class="flex flex-wrap gap-3">
+				<a
+					href={site.direccion.mapsUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="neon-btn inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm uppercase tracking-wide"
+				>
+					<NeonIcon name="pin" class="h-4 w-4" />
+					Cómo llegar
+				</a>
+				<a
+					href={site.direccion.mapsUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="acento-oro inline-flex items-center gap-2 rounded-md border px-6 py-3 text-sm uppercase tracking-wide text-[var(--color-neon-oro)]"
+				>
+					<NeonIcon name="star" class="h-4 w-4" />
+					Déjanos tu reseña
+				</a>
+			</div>
+		</div>
+
+		<div
+			id="mapa-visitanos"
+			data-mapa-src={`https://www.google.com/maps?q=${encodeURIComponent(site.direccion.calle + ", " + site.direccion.localidad)}&output=embed`}
+			data-mapa-titulo={`Mapa de ${site.direccion.calle}, ${site.direccion.localidad}`}
+			class="acento-oro mt-10 flex h-72 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-lg border bg-[var(--color-noche-2)] lg:mt-0 lg:h-auto lg:min-h-80 lg:w-1/2"
+		>
+			<NeonIcon name="pin" class="h-8 w-8 text-[var(--color-neon-cian)]" />
+			<p class="px-6 text-center text-xs text-gray-400">El mapa se carga desde Google Maps solo si lo pides.</p>
+			<button type="button" id="cargar-mapa" class="neon-btn rounded-md px-5 py-2 text-xs uppercase tracking-wide">
+				Cargar mapa
+			</button>
+		</div>
+	</div>
+</section>
+
+<script>
+	// El mapa no se carga (ni sus cookies de terceros) hasta que la persona lo pide.
+	const contenedor = document.getElementById("mapa-visitanos");
+	const boton = document.getElementById("cargar-mapa");
+
+	boton?.addEventListener("click", () => {
+		if (!contenedor) return;
+		const iframe = document.createElement("iframe");
+		iframe.src = contenedor.dataset.mapaSrc ?? "";
+		iframe.title = contenedor.dataset.mapaTitulo ?? "Mapa";
+		iframe.referrerPolicy = "no-referrer-when-downgrade";
+		iframe.className = "h-full w-full grayscale invert-[0.9] contrast-[1.1]";
+		contenedor.replaceChildren(iframe);
+	});
+</script>

@@ -1,0 +1,104 @@
+---
+import "../styles/global.css";
+import { site } from "../config/site.ts";
+import NeonIcon from "../components/NeonIcon.astro";
+import WhatsAppBubble from "../components/WhatsAppBubble.astro";
+import { Image } from "astro:assets";
+import coco from "../assets/decor/coco-neon.png";
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Inauguración — {site.nombre}</title>
+	</head>
+	<body class="bg-neon-glow flex min-h-screen flex-col items-center justify-between px-6 py-10 text-gray-200 lg:py-16">
+		<Image
+			src={coco}
+			alt=""
+			role="presentation"
+			width={200}
+			height={200}
+			class="h-24 w-24 [filter:hue-rotate(200deg)_saturate(1.6)_brightness(1.1)] sm:h-28 sm:w-28"
+		/>
+
+		<main class="flex flex-col items-center gap-8 text-center">
+			<h1 aria-label={`Inauguración ${site.nombre}`} class="neon-text [font-family:var(--font-inauguracion)] text-4xl leading-[0.95] text-[var(--color-neon-rosa)] sm:text-5xl lg:text-7xl">
+				<span class="whitespace-nowrap">Inauguraci<span class="tilde">o</span>n</span><br />Taberna Siglo XXI
+			</h1>
+
+			<div id="countdown" class="grid grid-cols-4 gap-3 sm:gap-6" data-switch-at={site.inauguracion.gateSwitchAt}>
+				<div class="flex flex-col items-center">
+					<span data-unit="dias" class="neon-text [font-family:var(--font-titular)] text-5xl text-[var(--color-neon-cian)] sm:text-7xl lg:text-8xl">00</span>
+					<span class="mt-1 text-[10px] uppercase tracking-widest text-gray-400 sm:text-xs">Días</span>
+				</div>
+				<div class="flex flex-col items-center">
+					<span data-unit="horas" class="neon-text [font-family:var(--font-titular)] text-5xl text-[var(--color-neon-cian)] sm:text-7xl lg:text-8xl">00</span>
+					<span class="mt-1 text-[10px] uppercase tracking-widest text-gray-400 sm:text-xs">Horas</span>
+				</div>
+				<div class="flex flex-col items-center">
+					<span data-unit="min" class="neon-text [font-family:var(--font-titular)] text-5xl text-[var(--color-neon-cian)] sm:text-7xl lg:text-8xl">00</span>
+					<span class="mt-1 text-[10px] uppercase tracking-widest text-gray-400 sm:text-xs">Min</span>
+				</div>
+				<div class="flex flex-col items-center">
+					<span data-unit="seg" class="neon-text [font-family:var(--font-titular)] text-5xl text-[var(--color-neon-cian)] sm:text-7xl lg:text-8xl">00</span>
+					<span class="mt-1 text-[10px] uppercase tracking-widest text-gray-400 sm:text-xs">Seg</span>
+				</div>
+			</div>
+
+			<p class="[font-family:var(--font-brocha)] text-2xl text-[var(--color-neon-oro)] sm:text-3xl">
+				Buen ambiente
+			</p>
+		</main>
+
+		<footer class="flex flex-col items-center gap-2 text-center text-sm text-gray-400">
+			<p class="flex items-center gap-2">
+				<NeonIcon name="calendar" class="h-4 w-4 shrink-0" />
+				{site.horario.dias}, {site.horario.apertura}–{site.horario.cierre}
+			</p>
+			<p class="flex items-center gap-2">
+				<NeonIcon name="pin" class="h-4 w-4 shrink-0" />
+				{site.direccion.calle}, {site.direccion.localidad}
+			</p>
+			<a href={site.direccion.mapsUrl} target="_blank" rel="noopener noreferrer" class="acento-oro mt-2 rounded-md border px-4 py-2 text-xs uppercase tracking-wide text-[var(--color-neon-oro)]">
+				Cómo llegar
+			</a>
+			<a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-gray-400 hover:text-[var(--color-neon-cian)]">
+				<NeonIcon name="instagram" class="h-4 w-4" />
+				{site.instagram}
+			</a>
+		</footer>
+
+		<WhatsAppBubble />
+
+		<script>
+			const el = document.getElementById("countdown");
+			if (el) {
+				const switchAt = new Date(el.dataset.switchAt ?? "").getTime();
+				const dias = el.querySelector('[data-unit="dias"]');
+				const horas = el.querySelector('[data-unit="horas"]');
+				const min = el.querySelector('[data-unit="min"]');
+				const seg = el.querySelector('[data-unit="seg"]');
+				const pad = (n: number) => String(Math.max(n, 0)).padStart(2, "0");
+
+				const tick = () => {
+					const diff = switchAt - Date.now();
+					if (diff <= 0) {
+						window.location.reload();
+						return;
+					}
+					const totalSeconds = Math.floor(diff / 1000);
+					if (dias) dias.textContent = pad(Math.floor(totalSeconds / 86400));
+					if (horas) horas.textContent = pad(Math.floor((totalSeconds % 86400) / 3600));
+					if (min) min.textContent = pad(Math.floor((totalSeconds % 3600) / 60));
+					if (seg) seg.textContent = pad(totalSeconds % 60);
+				};
+
+				tick();
+				setInterval(tick, 1000);
+			}
+		</script>
+	</body>
+</html>

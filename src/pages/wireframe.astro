@@ -1,0 +1,165 @@
+---
+export const prerender = false; // el middleware del gate necesita evaluar la fecha en cada petición
+import "../styles/global.css";
+import { site } from "../config/site.ts";
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Wireframe — {site.nombre}</title>
+	</head>
+	<body class="bg-white text-gray-900 font-sans">
+		<!-- HEADER -->
+		<header class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-300 bg-white/90 px-4 py-3 backdrop-blur lg:px-8">
+			<div class="border border-gray-400 px-3 py-1 text-sm font-bold uppercase tracking-wide">
+				{site.nombre}
+			</div>
+			<button class="border border-gray-400 px-3 py-1 text-sm lg:hidden" aria-label="Abrir menú">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
+					<path d="M4 6h16M4 12h16M4 18h16" />
+				</svg>
+			</button>
+			<nav class="hidden gap-6 text-sm uppercase tracking-wide lg:flex">
+				<a href="#inicio" class="hover:underline">Inicio</a>
+				<a href="#oferta" class="hover:underline">Oferta</a>
+				<a href="#eventos" class="hover:underline">Eventos</a>
+				<a href="#galeria" class="hover:underline">Galería</a>
+				<a href="#visitanos" class="hover:underline">Visítanos</a>
+			</nav>
+		</header>
+
+		<main>
+			<!-- HERO -->
+			<section id="inicio" class="flex min-h-[90vh] flex-col justify-end gap-4 border-b border-gray-300 bg-gray-200 p-6 lg:min-h-screen lg:flex-row lg:items-center lg:justify-between lg:p-16">
+				<div class="flex h-40 items-center justify-center border border-dashed border-gray-500 text-sm text-gray-500 lg:order-2 lg:h-96 lg:w-1/2">
+					[ imagen astronauta / mural ]
+				</div>
+				<div class="flex flex-col items-start gap-3 lg:order-1 lg:w-1/2">
+					<p class="text-3xl font-bold uppercase">Gran</p>
+					<p class="text-3xl font-bold uppercase">Inauguración</p>
+					<div class="flex items-center gap-2 border border-gray-500 px-4 py-2 text-sm">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4 shrink-0">
+							<rect x="3" y="5" width="18" height="16" rx="2" />
+							<path d="M3 10h18M8 3v4M16 3v4" />
+						</svg>
+						{site.inauguracion.fecha}
+					</div>
+					<p class="text-sm text-gray-600">
+						(a partir del {site.inauguracion.finMensaje} pasa a mostrar «{site.eslogan}»)
+					</p>
+					<div class="flex flex-wrap gap-3 pt-2">
+						<button class="border border-gray-600 px-4 py-2 text-sm uppercase">Cómo llegar</button>
+						<button class="border border-gray-600 px-4 py-2 text-sm uppercase">WhatsApp</button>
+					</div>
+				</div>
+			</section>
+
+			<!-- OFERTA -->
+			<section id="oferta" class="border-b border-gray-300 p-6 lg:p-16">
+				<h2 class="mb-6 text-xl font-bold uppercase">Qué ofrecemos</h2>
+				<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+					{site.oferta.map((item) => (
+						<div class="flex flex-col items-center gap-2 border border-gray-400 p-4 text-center">
+							<div class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-500">
+								{item.icono.slice(0, 2).toUpperCase()}
+							</div>
+							<span class="text-sm">{item.label}</span>
+						</div>
+					))}
+				</div>
+				<button class="mt-6 border border-gray-600 px-4 py-2 text-sm uppercase">Ver carta</button>
+				<p class="mt-1 text-xs text-gray-500">(fase 2: carta con precios)</p>
+			</section>
+
+			<!-- FRANJA FRASE -->
+			<section class="flex min-h-32 items-center justify-center border-b border-gray-300 bg-gray-100 p-6 text-center">
+				<p class="text-2xl italic text-gray-600">"Buen ambiente"</p>
+			</section>
+
+			<!-- EVENTOS -->
+			<section id="eventos" class="border-b border-gray-300 p-6 lg:flex lg:items-start lg:justify-between lg:gap-12 lg:p-16">
+				<div class="lg:w-1/2">
+					<h2 class="mb-2 text-xl font-bold uppercase">Celebra con nosotros</h2>
+					<p class="mb-6 text-sm text-gray-600">
+						{site.eventos.tipos.join(" · ")}
+					</p>
+					<div class="grid gap-4 sm:grid-cols-2">
+						{site.eventos.opciones.map((op) => (
+							<div class="flex h-24 items-center justify-center border border-gray-400 p-4 text-center text-sm">
+								{op.titulo}
+							</div>
+						))}
+					</div>
+				</div>
+				<div class="mt-8 flex h-64 items-center justify-center border border-dashed border-gray-500 p-4 text-center text-sm text-gray-500 lg:mt-0 lg:w-1/2">
+					[ formulario de reserva — ver /reservas ]
+					<br />
+					<button class="mt-4 border border-gray-600 px-4 py-2 text-xs uppercase">Reservar fecha</button>
+				</div>
+			</section>
+
+			<!-- GALERIA -->
+			<section id="galeria" class="border-b border-gray-300 p-6 lg:p-16">
+				<h2 class="mb-6 text-xl font-bold uppercase">Galería</h2>
+				<div class="flex gap-4 overflow-x-auto pb-2">
+					{[1, 2, 3, 4, 5].map((n) => (
+						<div class="flex h-32 w-48 flex-none items-center justify-center border border-dashed border-gray-500 text-xs text-gray-500">
+							img {n}
+						</div>
+					))}
+				</div>
+				<a href={site.instagramUrl} class="mt-4 inline-block text-sm underline">Más en Instagram</a>
+			</section>
+
+			<!-- VISITANOS -->
+			<section id="visitanos" class="border-b border-gray-300 p-6 lg:flex lg:items-start lg:justify-between lg:gap-12 lg:p-16">
+				<div class="lg:w-1/2">
+					<h2 class="mb-4 text-xl font-bold uppercase">Visítanos</h2>
+					<p class="flex items-center gap-2 text-sm">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4 shrink-0">
+							<rect x="3" y="5" width="18" height="16" rx="2" />
+							<path d="M3 10h18M8 3v4M16 3v4" />
+						</svg>
+						{site.horario.dias} {site.horario.apertura}–{site.horario.cierre}
+					</p>
+					<p class="flex items-center gap-2 text-sm">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4 shrink-0">
+							<path d="M12 21s7-7.5 7-12a7 7 0 10-14 0c0 4.5 7 12 7 12z" />
+							<circle cx="12" cy="9" r="2.5" />
+						</svg>
+						{site.direccion.calle}, {site.direccion.localidad}
+					</p>
+					<button class="mt-4 inline-flex items-center gap-2 border border-gray-600 px-4 py-2 text-sm uppercase">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
+							<path d="M12 17.3l-5.4 3.2 1.4-6-4.6-4 6-.5L12 4l2.6 6 6 .5-4.6 4 1.4 6z" stroke-linejoin="round" />
+						</svg>
+						Déjanos tu reseña
+					</button>
+				</div>
+				<div class="mt-6 flex h-64 items-center justify-center border border-dashed border-gray-500 text-sm text-gray-500 lg:mt-0 lg:w-1/2">
+					[ mapa — carga diferida ]
+				</div>
+			</section>
+		</main>
+
+		<!-- FOOTER -->
+		<footer class="p-6 text-center text-sm text-gray-600 lg:p-16">
+			<p class="mb-4 text-lg italic">"Te esperamos"</p>
+			<div class="mb-4 flex justify-center gap-4">
+				<a href={site.instagramUrl} class="underline">Instagram</a>
+				<a href="#" class="underline">WhatsApp</a>
+				<a href="#" class="underline">Maps</a>
+			</div>
+			<div class="mb-2 flex justify-center gap-4">
+				<a href="/aviso-legal" class="underline">Aviso legal</a>
+				<a href="/privacidad" class="underline">Privacidad</a>
+				<a href="/cookies" class="underline">Cookies</a>
+			</div>
+			<p>&copy; 2026 {site.nombre}</p>
+		</footer>
+	</body>
+</html>

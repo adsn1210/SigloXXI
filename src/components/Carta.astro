@@ -1,0 +1,73 @@
+---
+import { Image } from "astro:assets";
+import { site } from "../config/site.ts";
+import NeonIcon from "./NeonIcon.astro";
+import coco from "../assets/decor/coco-neon.png";
+import cocteles from "../assets/fotos/cocteles.jpg";
+import chupitos from "../assets/fotos/chupitos.jpg";
+import botella from "../assets/fotos/botella.jpg";
+
+const iconos = {
+	cerveza: "beer",
+	copa: "cocktail",
+	coctelera: "cocktail",
+	tapa: "food",
+	"nota-musical": "music",
+} as const;
+
+const fotos = [
+	{ src: cocteles, alt: "Cócteles servidos en barra, Taberna Siglo XXI" },
+	{ src: chupitos, alt: "Chupitos preparados en barra, Taberna Siglo XXI" },
+	{ src: botella, alt: "Botella y cubitera de hielo, Taberna Siglo XXI" },
+];
+---
+
+<section id="oferta" class="bg-neon-glow relative overflow-hidden px-6 py-20 lg:px-10 lg:py-28">
+	<Image
+		src={coco}
+		alt=""
+		role="presentation"
+		width={340}
+		height={340}
+		class="pointer-events-none absolute -right-10 -top-10 w-44 opacity-40 mix-blend-screen [filter:hue-rotate(200deg)_saturate(1.6)_brightness(1.1)] lg:w-64"
+	/>
+
+	<div class="relative mx-auto max-w-5xl">
+		<h2 class="neon-text mb-3 [font-family:var(--font-titular)] text-3xl tracking-wide text-[var(--color-neon-rosa)] lg:text-5xl">
+			Carta
+		</h2>
+		<p class="mb-10 max-w-xl [font-family:var(--font-acento)] text-xl italic text-gray-400">
+			Cervezas, copas y combinados con acento propio.
+		</p>
+
+		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+			{site.oferta.map((item) => (
+				<div class="acento-oro flex flex-col items-center gap-3 rounded-lg border p-5 text-center">
+					<NeonIcon name={iconos[item.icono as keyof typeof iconos]} class="h-7 w-7 text-[var(--color-neon-oro)]" />
+					<span class="text-sm text-gray-300">{item.label}</span>
+				</div>
+			))}
+		</div>
+
+		<div class="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
+			{fotos.map((foto) => (
+				<Image
+					src={foto.src}
+					alt={foto.alt}
+					widths={[320, 640]}
+					sizes="(min-width: 640px) 33vw, 100vw"
+					class="neon-box h-56 w-full rounded-lg object-cover"
+				/>
+			))}
+		</div>
+
+		<a
+			href={site.contacto.whatsappUrl}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="neon-btn mt-10 inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm uppercase tracking-wide"
+		>
+			Pregúntanos por la carta
+		</a>
+	</div>
+</section>

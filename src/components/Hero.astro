@@ -1,0 +1,87 @@
+---
+import { Image } from "astro:assets";
+import { site } from "../config/site.ts";
+import NeonIcon from "./NeonIcon.astro";
+import muralAstronauta from "../assets/fotos/mural-astronauta.jpg";
+
+// La home se renderiza en cada petición (prerender = false), así que la fecha es la real del servidor.
+// Solo en desarrollo: ?ahora=2026-10-05T12:00 simula otra fecha para revisar el cambio.
+const simulada = import.meta.env.DEV ? Astro.url.searchParams.get("ahora") : null;
+const ahora = simulada
+	? new Date(`${simulada.includes("T") ? simulada : `${simulada}T12:00`}+02:00`)
+	: new Date();
+// El mensaje de inauguración se ve durante todo el día 3 (hora Madrid) y cambia el 04/10 a las 00:00.
+const finMensaje = new Date(`${site.inauguracion.finMensaje}T00:00:00+02:00`);
+const mostrarInauguracion = ahora < finMensaje;
+---
+
+<section id="inicio" class="relative flex min-h-screen flex-col justify-end overflow-hidden">
+	<Image
+		src={muralAstronauta}
+		alt="Mural del astronauta en luz negra, Taberna Siglo XXI"
+		class="absolute inset-0 h-full w-full object-cover"
+		widths={[480, 768, 1280, 1920]}
+		sizes="100vw"
+	/>
+	<div class="absolute inset-0 bg-gradient-to-t from-[var(--color-noche)] via-[var(--color-noche)]/70 to-[var(--color-noche)]/20"></div>
+
+	<div class="relative flex flex-col items-start gap-5 px-6 py-16 lg:items-center lg:px-8 lg:py-24 lg:text-center">
+		<p class="flex items-center gap-3 text-[var(--color-neon-oro)]">
+			<span aria-hidden="true" class="h-px w-10 bg-current opacity-70"></span>
+			<span class="[font-family:var(--font-acento)] text-2xl italic leading-none">Taberna</span>
+			<span class="text-sm font-bold uppercase leading-none tracking-[0.35em]">Siglo XXI</span>
+			<span aria-hidden="true" class="hidden h-px w-10 bg-current opacity-70 lg:block"></span>
+		</p>
+
+		{mostrarInauguracion ? (
+			<>
+				<h1 aria-label="Gran Inauguración" class="neon-text [font-family:var(--font-inauguracion)] text-[10.5vw] leading-[0.95] text-[var(--color-neon-rosa)] sm:text-6xl lg:text-8xl">
+					Gran <span class="whitespace-nowrap">Inauguraci<span class="tilde">o</span>n</span>
+				</h1>
+				<div class="neon-text flex items-center gap-3 [font-family:var(--font-titular)] text-2xl tracking-wide text-[var(--color-neon-cian)] lg:text-3xl">
+					<NeonIcon name="calendar" class="h-6 w-6" />
+					03 de octubre 2026
+				</div>
+			</>
+		) : (
+			<h1 aria-label={site.eslogan} class="neon-text flex flex-col sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4 [font-family:var(--font-titular)] text-[17vw] font-bold uppercase leading-[0.95] tracking-tight text-[var(--color-neon-rosa)] sm:text-7xl lg:justify-center lg:gap-x-6 lg:text-8xl">
+				{site.eslogan.split(" · ").map((palabra, i) => (
+					<span class="whitespace-nowrap">
+						{i > 0 && <span aria-hidden="true" class="mr-4 hidden text-[var(--color-neon-oro)] sm:inline lg:mr-6">·</span>}
+						{palabra}
+					</span>
+				))}
+			</h1>
+		)}
+
+		<p class="[font-family:var(--font-brocha)] text-3xl text-[var(--color-neon-oro)]">
+			Buen ambiente
+		</p>
+
+		<ul class="flex flex-col gap-2 text-sm text-gray-200 sm:flex-row sm:gap-6 lg:justify-center">
+			<li class="flex items-center gap-2">
+				<NeonIcon name="calendar" class="h-4 w-4 shrink-0 text-[var(--color-neon-oro)]" />
+				{site.horario.dias} · {site.horario.apertura}–{site.horario.cierre}
+			</li>
+			<li class="flex items-center gap-2">
+				<NeonIcon name="pin" class="h-4 w-4 shrink-0 text-[var(--color-neon-oro)]" />
+				{site.direccion.calle}, {site.direccion.localidad}
+			</li>
+		</ul>
+
+		<div class="flex flex-wrap gap-3 pt-2 lg:justify-center">
+			<a href={site.direccion.mapsUrl} target="_blank" rel="noopener noreferrer" class="neon-btn inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm uppercase tracking-wide">
+				<NeonIcon name="pin" class="h-4 w-4" />
+				Cómo llegar
+			</a>
+			<a href={site.contacto.whatsappUrl} target="_blank" rel="noopener noreferrer" class="acento-oro inline-flex items-center gap-2 rounded-md border px-6 py-3 text-sm uppercase tracking-wide text-[var(--color-neon-oro)]">
+				<NeonIcon name="whatsapp" class="h-4 w-4" />
+				WhatsApp
+			</a>
+			<a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label={`Instagram ${site.instagram}`} class="inline-flex items-center gap-2 rounded-md border border-[var(--color-neon-cian)] px-6 py-3 text-sm uppercase tracking-wide text-[var(--color-neon-cian)] shadow-[0_0_14px_-3px_var(--color-neon-cian)]">
+				<NeonIcon name="instagram" class="h-4 w-4" />
+				{site.instagram}
+			</a>
+		</div>
+	</div>
+</section>

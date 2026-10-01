@@ -1,0 +1,14 @@
+---
+import { site } from "../config/site.ts";
+import NeonIcon from "./NeonIcon.astro";
+---
+
+<a
+	href={site.contacto.whatsappUrl}
+	target="_blank"
+	rel="noopener noreferrer"
+	aria-label="Escríbenos por WhatsApp"
+	class="neon-btn fixed bottom-5 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-noche)]"
+>
+	<NeonIcon name="whatsapp" class="h-7 w-7" />
+</a>

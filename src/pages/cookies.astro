@@ -1,0 +1,13 @@
+---
+export const prerender = false; // el middleware del gate necesita evaluar la fecha en cada petición
+import LegalLayout from "../layouts/LegalLayout.astro";
+---
+
+<LegalLayout titulo="Política de cookies">
+	<p>
+		Esta web usa el mínimo de cookies técnicas necesarias para funcionar. El mapa de la
+		sección "Visítanos" solo carga cookies de Google Maps si pulsas el botón "Cargar
+		mapa" — no se cargan antes de forma automática. Este apartado se ampliará cuando se
+		incorpore el banner de consentimiento definitivo.
+	</p>
+</LegalLayout>

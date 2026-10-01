@@ -1,0 +1,216 @@
+---
+import { site } from "../config/site.ts";
+import NeonIcon from "./NeonIcon.astro";
+
+const links = [
+	{ href: "#inicio", label: "Inicio" },
+	{ href: "#oferta", label: "Carta" },
+	{ href: "#eventos", label: "Eventos" },
+	{ href: "#galeria", label: "Galería" },
+	{ href: "#visitanos", label: "Ubícanos" },
+];
+---
+
+<header class="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[var(--color-noche)]/90 px-5 py-4 backdrop-blur lg:px-10">
+	<a href="#inicio" aria-label={`${site.nombre}, ir al inicio`} class="flex flex-col leading-none text-[var(--color-neon-oro)]">
+		<span class="[font-family:var(--font-acento)] text-lg italic">Taberna</span>
+		<span class="-mt-0.5 text-sm font-bold uppercase tracking-[0.35em]">Siglo XXI</span>
+	</a>
+
+	<!-- Un único botón abre y cierra: las tres líneas se convierten en X -->
+	<button
+		id="menu-toggle"
+		type="button"
+		aria-label="Abrir menú"
+		aria-expanded="false"
+		aria-controls="menu-panel"
+		class="menu-toggle relative h-11 w-11 text-[var(--color-neon-rosa)] lg:hidden"
+	>
+		<span class="menu-linea"></span>
+		<span class="menu-linea"></span>
+		<span class="menu-linea"></span>
+	</button>
+
+	<nav class="hidden items-center gap-8 text-sm uppercase tracking-wide text-gray-300 lg:flex">
+		{links.map((link) => (
+			<a href={link.href} class="transition-colors hover:text-[var(--color-neon-cian)]">
+				{link.label}
+			</a>
+		))}
+		<a href="/reservas" class="neon-btn rounded-md px-5 py-2 text-xs">
+			Reservar
+		</a>
+	</nav>
+</header>
+
+<!-- Panel móvil: queda por debajo del header (z-30 < z-40), así el botón de cerrar siempre es clicable -->
+<div
+	id="menu-panel"
+	class="menu-panel bg-neon-glow fixed inset-x-0 bottom-0 top-[var(--alto-header,77px)] z-30 flex flex-col overflow-y-auto px-6 pb-8 pt-10 lg:hidden"
+	aria-hidden="true"
+	inert
+>
+	<nav aria-label="Menú principal" class="flex-1">
+		<ul class="flex flex-col items-center">
+			{links.map((link, i) => (
+				<li class="menu-item flex flex-col items-center" style={`--i: ${i}`}>
+					{i > 0 && (
+						<span aria-hidden="true" class="flex items-center gap-2 py-1">
+							<span class="h-px w-7 bg-[var(--color-neon-oro)]/50"></span>
+							<span class="menu-rombo"></span>
+							<span class="h-px w-7 bg-[var(--color-neon-oro)]/50"></span>
+						</span>
+					)}
+					<a href={link.href} class="menu-link block py-3 text-center [font-family:var(--font-titular)] text-4xl font-bold uppercase tracking-tight text-gray-100 transition-colors hover:text-[var(--color-neon-rosa)] focus-visible:text-[var(--color-neon-rosa)]">
+						{link.label}
+					</a>
+				</li>
+			))}
+		</ul>
+
+		<a href="/reservas" class="menu-item menu-link neon-btn mt-8 flex items-center justify-center gap-2 rounded-md py-4 text-sm uppercase tracking-[0.2em]" style={`--i: ${links.length}`}>
+			<NeonIcon name="calendar" class="h-4 w-4" />
+			Reservar fecha
+		</a>
+	</nav>
+
+	<div class="menu-item mt-10 flex flex-col items-center space-y-3 border-t border-[var(--color-neon-oro)]/40 pt-6 text-center text-sm text-gray-300" style={`--i: ${links.length + 1}`}>
+		<p class="flex items-center gap-3">
+			<NeonIcon name="calendar" class="h-4 w-4 shrink-0 text-[var(--color-neon-oro)]" />
+			{site.horario.dias} · {site.horario.apertura}–{site.horario.cierre}
+		</p>
+		<p class="flex items-center gap-3">
+			<NeonIcon name="pin" class="h-4 w-4 shrink-0 text-[var(--color-neon-oro)]" />
+			{site.direccion.calle}, {site.direccion.localidad}
+		</p>
+		<div class="flex justify-center gap-3 pt-3">
+			<a href={site.contacto.whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="menu-social">
+				<NeonIcon name="whatsapp" class="h-5 w-5" />
+			</a>
+			<a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label={`Instagram ${site.instagram}`} class="menu-social">
+				<NeonIcon name="instagram" class="h-5 w-5" />
+			</a>
+			<a href={site.direccion.mapsUrl} target="_blank" rel="noopener noreferrer" aria-label="Cómo llegar en Google Maps" class="menu-social">
+				<NeonIcon name="pin" class="h-5 w-5" />
+			</a>
+		</div>
+	</div>
+</div>
+
+<style>
+	/* Hamburguesa → X */
+	.menu-linea {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		height: 1.5px;
+		width: 24px;
+		border-radius: 1px;
+		background: currentColor;
+		box-shadow: 0 0 8px currentColor;
+		transition: transform 0.3s ease, opacity 0.2s ease;
+	}
+	.menu-linea:nth-child(1) { transform: translate(-50%, -7px); }
+	.menu-linea:nth-child(2) { transform: translate(-50%, 0); width: 16px; margin-left: 4px; }
+	.menu-linea:nth-child(3) { transform: translate(-50%, 7px); }
+
+	.menu-toggle[aria-expanded="true"] .menu-linea:nth-child(1) { transform: translate(-50%, 0) rotate(45deg); }
+	.menu-toggle[aria-expanded="true"] .menu-linea:nth-child(2) { opacity: 0; }
+	.menu-toggle[aria-expanded="true"] .menu-linea:nth-child(3) { transform: translate(-50%, 0) rotate(-45deg); }
+
+	/* Panel: entra deslizando desde arriba; los elementos aparecen escalonados */
+	.menu-panel {
+		visibility: hidden;
+		opacity: 0;
+		transform: translateY(-12px);
+		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+	}
+	.menu-panel.abierto {
+		visibility: visible;
+		opacity: 1;
+		transform: none;
+		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s;
+	}
+
+	.menu-item {
+		opacity: 0;
+		transform: translateX(-16px);
+		transition: opacity 0.35s ease, transform 0.35s ease;
+	}
+	.menu-panel.abierto .menu-item {
+		opacity: 1;
+		transform: none;
+		transition-delay: calc(0.05s * var(--i) + 0.1s);
+	}
+
+	/* separador entre enlaces: rombo dorado entre dos filetes */
+	.menu-rombo {
+		height: 5px;
+		width: 5px;
+		transform: rotate(45deg);
+		background: var(--color-neon-oro);
+		box-shadow: 0 0 8px var(--color-neon-oro);
+	}
+
+	.menu-social {
+		display: inline-flex;
+		height: 2.75rem;
+		width: 2.75rem;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		border: 1px solid var(--color-neon-oro);
+		color: var(--color-neon-oro);
+		box-shadow: 0 0 14px -3px var(--color-neon-oro);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.menu-linea,
+		.menu-panel,
+		.menu-panel.abierto,
+		.menu-item,
+		.menu-panel.abierto .menu-item {
+			transition: none;
+			transform: none;
+		}
+	}
+</style>
+
+<script>
+	const toggle = document.getElementById("menu-toggle");
+	const panel = document.getElementById("menu-panel");
+	const header = toggle?.closest("header");
+
+	if (toggle && panel) {
+		const ajustarAlto = () => {
+			if (header) document.documentElement.style.setProperty("--alto-header", `${header.offsetHeight}px`);
+		};
+
+		const setOpen = (open: boolean) => {
+			ajustarAlto();
+			panel.classList.toggle("abierto", open);
+			panel.toggleAttribute("inert", !open);
+			panel.setAttribute("aria-hidden", String(!open));
+			toggle.setAttribute("aria-expanded", String(open));
+			toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+			document.body.style.overflow = open ? "hidden" : "";
+		};
+
+		const estaAbierto = () => toggle.getAttribute("aria-expanded") === "true";
+
+		toggle.addEventListener("click", () => setOpen(!estaAbierto()));
+		panel.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+		document.addEventListener("keydown", (e) => {
+			if (e.key === "Escape" && estaAbierto()) {
+				setOpen(false);
+				toggle.focus();
+			}
+		});
+		// si se pasa a escritorio con el menú abierto, se cierra
+		window.matchMedia("(min-width: 1024px)").addEventListener("change", (e) => {
+			if (e.matches) setOpen(false);
+		});
+		window.addEventListener("resize", ajustarAlto);
+		ajustarAlto();
+	}
+</script>

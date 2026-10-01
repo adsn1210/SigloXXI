@@ -1,0 +1,133 @@
+@import "tailwindcss";
+@import "@fontsource/permanent-marker/400.css";
+@import "@fontsource/cormorant-garamond/400-italic.css";
+
+/* Tipografía propia del cliente (public/fonts/) — no viene por @fontsource.
+   Matcha World: 100% libre para uso personal y comercial (ver More Info.txt del paquete).
+   Uso restringido: SOLO el título de inauguración (--font-inauguracion), no el resto
+   de titulares. Makcasa se eliminó (2026-09-30) — sin licencia confirmada de uso web. */
+@font-face {
+  font-family: "Matcha World";
+  src: url("/fonts/MatchaWorld.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Identidad visual NEÓN — Taberna Siglo XXI
+   Base: flyer de inauguración (astronauta, mural de manos, barra con luz roja/violeta).
+   Matiz acordado con el cliente: el neón manda, con un aire latino-español discreto
+   (nada literal: sin banderas ni iconografía folclórica — solo el protagonismo del dorado
+   y una tipografía más cálida) y una composición cuidada ("elegante, estilo Calle Serrano").
+   IMPORTANTE: la elegancia viene del espaciado, la tipografía y el degradado — NO de apagar
+   el color. El primer intento desaturó demasiado y usó un fondo casi negro-sobre-negro;
+   el cliente lo rechazó explícitamente ("no quiero un fondo de un solo color"). Colores a
+   saturación original del flyer. Sin emojis en ningún sitio de la web — solo SVG/iconos de línea.
+   Fase 1 (wireframe) NO usa estos tokens; se aplican a partir de Fase 2. */
+@theme {
+  --color-noche: #07030f;
+  --color-noche-2: #120822;
+  --color-neon-rosa: #ff2d95;
+  --color-neon-cian: #22d3ee;
+  --color-neon-violeta: #a855f7;
+  --color-neon-oro: #ffc93c;
+
+  --font-titular: "Arial Narrow", Arial, sans-serif;
+  --font-brocha: "Permanent Marker", cursive;
+  --font-cuerpo: "Arial Narrow", Arial, sans-serif;
+  /* Solo para el título de inauguración (Hero + /countdown), no para el resto de titulares. */
+  --font-inauguracion: "Matcha World", sans-serif;
+  /* Serif de acento — precios, citas, frases destacadas. Usar en cursiva (italic). */
+  --font-acento: "Cormorant Garamond", serif;
+}
+
+body {
+  font-family: var(--font-cuerpo);
+}
+
+/* Efectos neón — usar con moderación: titulares y CTA sí, cuerpo de texto limpio.
+   Glow de una sola capa (no el triple-shadow "cartel de bar" del primer boceto): se
+   nota el neón sin que compita con el resto de la composición, pero el color en sí
+   se mantiene vivo. */
+.neon-text {
+  text-shadow: 0 0 14px currentColor;
+}
+
+.neon-box {
+  border: 1px solid var(--color-neon-violeta);
+  box-shadow: 0 0 18px -3px var(--color-neon-violeta);
+}
+
+.neon-btn {
+  border: 1px solid var(--color-neon-rosa);
+  color: var(--color-neon-rosa);
+  text-shadow: 0 0 10px var(--color-neon-rosa);
+  box-shadow: 0 0 16px -3px var(--color-neon-rosa);
+  transition: filter 0.2s ease;
+}
+
+.neon-btn:hover {
+  filter: brightness(1.15);
+}
+
+/* Acento dorado — bordes, separadores, detalles pequeños. Es el que lleva el peso
+   del guiño latino-español: usar con más frecuencia que violeta/cian, pero solo en
+   detalles (nunca como fondo grande). */
+.acento-oro {
+  border-color: var(--color-neon-oro);
+  box-shadow: 0 0 14px -3px var(--color-neon-oro);
+}
+
+/* Matcha World no trae vocales acentuadas: se escribe la vocal sin tilde dentro de
+   <span class="tilde"> y la tilde se dibuja encima con el mismo color y glow. */
+.tilde {
+  position: relative;
+  display: inline-block;
+}
+
+.tilde::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -0.2em;
+  width: 0.11em;
+  height: 0.24em;
+  border-radius: 0.06em;
+  background: currentColor;
+  box-shadow: 0 0 14px currentColor;
+  transform: translateX(-20%) rotate(40deg);
+}
+
+.flicker {
+  animation: neon-flicker 3.5s infinite;
+}
+
+@keyframes neon-flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.6; }
+  98% { opacity: 1; }
+  99% { opacity: 0.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flicker {
+    animation: none;
+  }
+}
+
+/* Fondo neón con degradado — varias luces de color (rosa/cián/violeta) difuminadas
+   sobre la base oscura, como si vinieran de tubos de neón fuera de plano. Esto reemplaza
+   el intento anterior (dos negros casi iguales, ilegible como degradado). Usar en
+   secciones de fondo oscuro (hero, franjas, footer). */
+.bg-neon-glow {
+  background-color: var(--color-noche);
+  background-image:
+    radial-gradient(ellipse 60% 50% at 12% -10%, color-mix(in srgb, var(--color-neon-rosa) 55%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 50% at 88% 0%, color-mix(in srgb, var(--color-neon-cian) 45%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 60% at 50% 110%, color-mix(in srgb, var(--color-neon-violeta) 45%, transparent) 0%, transparent 70%),
+    linear-gradient(180deg, var(--color-noche-2) 0%, var(--color-noche) 100%);
+}
+
+/* Guía de espaciado (Fase 2): secciones más "airadas" que un wireframe denso —
+   móvil ~ py-20, escritorio (lg) ~ py-28, con más separación entre bloques internos
+   que en la maqueta gris de Fase 1. No es un token, es una convención para los componentes. */
