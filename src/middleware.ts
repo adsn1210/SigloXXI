@@ -51,7 +51,7 @@ export const onRequest = defineMiddleware((context, next) => {
 	const esValido = (valor: string | null | undefined) =>
 		!!valor && ((!!token && valor === token) || (import.meta.env.DEV && valor === "1"));
 	// Diagnóstico sin revelar nada: solo indica si el servidor tiene un token configurado.
-	const diagnostico = { "x-sxxi-preview": token ? `configurado-${token.length}` : "sin-token" };
+	const diagnostico = { "x-sxxi-preview": token ? "configurado" : "sin-token" };
 
 	const param = context.url.searchParams.get("preview");
 	if (param === "salir") {
