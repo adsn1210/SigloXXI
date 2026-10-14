@@ -2,7 +2,7 @@ export const site = {
   nombre: "Taberna Siglo XXI",
   eslogan: "Bar · Tardeo · Copas",
   // TODO: cambiar por el dominio definitivo cuando el cliente lo contrate (canonical, OG, sitemap)
-  url: "https://sigoxxi.netlify.app",
+  url: "https://siglo21parla.netlify.app",
 
   seo: {
     titulo: "Taberna Siglo XXI · Bar de tardeo y copas en Parla",

@@ -286,7 +286,7 @@ y `_redirects` para `/resena` y `/qr` (Fase 4 — necesitan Place ID / enlace re
 - [x] Home real con fotos reales del local, menú hamburguesa, orden Carta → Galería → Eventos → Ubícanos
 - [x] Páginas legales con placeholders
 - [x] JSON-LD `BarOrPub`, meta OG (imagen del mural), favicon con corona, sitemap, robots, 404
-- [x] Deploy en Netlify (https://sigoxxi.netlify.app, cuenta de Adri, auto-deploy desde `main`)
+- [x] Deploy en Netlify (https://siglo21parla.netlify.app, cuenta de Adri, auto-deploy desde `main`)
 - [ ] DNS del dominio definitivo (lo contrata el cliente) + actualizar `site.url`
 - [ ] Revisar visualmente en navegador (375px y escritorio) — solo verificado por build/curl hasta ahora
 
